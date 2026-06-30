@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>🏆 Sports Quiz · Filter & Challenge</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0b1a2e 0%, #1a3a4f 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .game-container {
+      max-width: 750px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 56px;
+      padding: 22px 20px 30px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      transition: 0.2s;
+    }
+    h1 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fae67a;
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin-bottom: 18px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 12px;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      flex-wrap: wrap;
+    }
+    h1 span {
+      background: #f5b042;
+      color: #0b1a2e;
+      font-size: 1.6rem;
+      padding: 0 14px;
+      border-radius: 40px;
+      line-height: 1.3;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 14px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px);
+      padding: 14px 18px;
+      border-radius: 80px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      justify-content: center;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: #d6e9f5;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .filter-group select {
+      background: #1f4058;
+      border: 1px solid #f5b04255;
+      color: white;
+      padding: 8px 16px 8px 14px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      outline: none;
+      backdrop-filter: blur(4px);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+      transition: 0.1s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5b042' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 38px;
+    }
+    .filter-group select:hover {
+      border-color: #f5b042;
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+      padding: 12px 20px;
+      border-radius: 80px;
+      margin-bottom: 24px;
+      color: #e3f0fa;
+      font-weight: 500;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stats-bar div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge {
+      background: #f5b042;
+      color: #0a1f2b;
+      padding: 0 14px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .question-box {
+      background: rgba(10, 25, 40, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 40px;
+      padding: 26px 18px 18px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      box-shadow: inset 0 8px 12px rgba(0,0,0,0.3);
+    }
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #ffffff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      min-height: 4rem;
+      padding: 0 4px;
+      letter-spacing: 0.2px;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 18px 0 8px;
+    }
+    .option-btn {
+      background: rgba(20, 50, 70, 0.7);
+      backdrop-filter: blur(4px);
+      border: 2px solid rgba(255, 215, 0, 0.15);
+      padding: 16px 8px;
+      border-radius: 60px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #f0f9ff;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+      text-align: center;
+      word-break: break-word;
+    }
+    .option-btn:active { transform: scale(0.96); }
+    .option-btn:hover:not(:disabled) {
+      background: rgba(245, 176, 66, 0.2);
+      border-color: #f5b042;
+    }
+    .option-btn.correct {
+      background: #2b8c5e;
+      border-color: #a3f0b0;
+      box-shadow: 0 0 18px #2b8c5e;
+      color: white;
+    }
+    .option-btn.wrong {
+      background: #b13e4b;
+      border-color: #ff8a8a;
+      box-shadow: 0 0 18px #b13e4b;
+      color: white;
+    }
+    .option-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(0.3);
+      transform: scale(0.98);
+    }
+    .feedback-area {
+      min-height: 3.6rem;
+      margin: 6px 0 14px;
+      padding: 10px 16px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #ffecbb;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 80px;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 6px;
+    }
+    .btn {
+      background: #f5b042;
+      border: none;
+      padding: 16px 28px;
+      border-radius: 80px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0b1a2e;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.12s;
+      box-shadow: 0 8px 0 #a06d28, 0 6px 16px rgba(0,0,0,0.4);
+      border: 1px solid #ffd966;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+    .btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #a06d28;
+    }
+    .btn.secondary {
+      background: #2d4d66;
+      box-shadow: 0 8px 0 #1a3142;
+      color: white;
+      border-color: #4b7a9c;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #a06d28;
+      pointer-events: none;
+    }
+    .footer-note {
+      margin-top: 22px;
+      text-align: center;
+      color: #b6cfdd;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      letter-spacing: 0.3px;
+      border-top: 1px dashed rgba(255,215,0,0.15);
+      padding-top: 16px;
+    }
+    @media (max-width: 540px) {
+      .game-container { padding: 14px; }
+      .question-text { font-size: 1.25rem; }
+      .options-grid { gap: 10px; }
+      .option-btn { font-size: 0.95rem; padding: 14px 6px; }
+      .btn { padding: 14px 18px; font-size: 1rem; }
+      h1 { font-size: 1.5rem; }
+      .filter-bar { border-radius: 40px; padding: 12px 12px; gap: 10px; }
+      .filter-group select { padding: 6px 30px 6px 12px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="game-container" role="main">
+  <h1>
+    ⚡ Sports · Quiz
+    <span>🧠</span>
+  </h1>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="sportFilter">🏅 Sport</label>
+      <select id="sportFilter">
+        <option value="all">All</option>
+        <option value="soccer">⚽ Soccer</option>
+        <option value="basketball">🏀 Basketball</option>
+        <option value="tennis">🎾 Tennis</option>
+        <option value="racing">🏎️ Racing</option>
+        <option value="swimming">🏊 Swimming</option>
+        <option value="athletics">🏃 Athletics</option>
+        <option value="winter">❄️ Winter</option>
+        <option value="general">🌟 General</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="difficultyFilter">📊 Difficulty</label>
+      <select id="difficultyFilter">
+        <option value="all">All</option>
+        <option value="easy">🟢 Easy</option>
+        <option value="medium">🟡 Medium</option>
+        <option value="hard">🔴 Hard</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div>📋 Q <span id="qIndexDisplay" class="badge">1</span> / <span id="totalQDisplay">10</span></div>
+    <div>🏆 Score <span id="scoreDisplay" class="badge">0</span></div>
+  </div>
+
+  <div class="question-box">
+    <div class="question-text" id="questionText">Choose filters & start</div>
+    <div class="options-grid" id="optionsContainer">
+      <button class="option-btn" data-index="0">—</button>
+      <button class="option-btn" data-index="1">—</button>
+      <button class="option-btn" data-index="2">—</button>
+      <button class="option-btn" data-index="3">—</button>
+    </div>
+    <div class="feedback-area" id="feedbackMessage">💡 Pick an option</div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn" id="nextBtn">▶ Next</button>
+    <button class="btn secondary" id="resetBtn">🔄 New Game</button>
+  </div>
+  <div class="footer-note">✨ Auto‑generated · Filter by sport & difficulty · EN</div>
+</div>
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- EXPANDED QUESTION BANK (each sport 100+ items, balanced difficulty) ----------
+    // Helper to generate many items per sport. We'll create a large array.
+    const QUESTION_BANK = [];
+
+    // ---- SOCCER (120 items) ----
+    const soccerPool = [
+      // easy (40)
+      { q: "How many players per team on the field in soccer?", opts: ["9", "10", "11", "12"], ans: 2, sport: "soccer", difficulty: "easy" },
+      { q: "How often is the FIFA World Cup held?", opts: ["2 years", "3 years", "4 years", "5 years"], ans: 2, sport: "soccer", difficulty: "easy" },
+      { q: "What is the maximum number of substitutions allowed in a competitive soccer match (usually)?", opts: ["3", "5", "7", "9"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "Which country has won the most FIFA World Cups (men)?", opts: ["Brazil", "Germany", "Italy", "Argentina"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the diameter of a standard soccer ball (approx.)?", opts: ["20 cm", "22 cm", "25 cm", "28 cm"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "What is the penalty spot distance from the goal line?", opts: ["9 m", "11 m", "12 m", "14 m"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "What is the width of a soccer goal (standard)?", opts: ["7.32 m", "8.0 m", "6.5 m", "7.0 m"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which country is known as the 'Kingdom of Football'?", opts: ["Argentina", "Brazil", "Germany", "Italy"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "What is the duration of a standard soccer match (regulation)?", opts: ["80 min", "90 min", "100 min", "120 min"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "Which city hosted the 2022 World Cup final?", opts: ["Doha", "Dubai", "Riyadh", "Abu Dhabi"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the nickname of the Brazilian national team?", opts: ["Canarinho", "Albiceleste", "Azurri", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the offside rule in simple terms?", opts: ["Ahead of last defender", "Behind goalkeeper", "Handball", "Foul"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the most common formation in modern soccer?", opts: ["4-4-2", "4-3-3", "3-5-2", "5-4-1"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Who is the all-time top scorer in the UEFA Champions League?", opts: ["Cristiano Ronaldo", "Lionel Messi", "Robert Lewandowski", "Karim Benzema"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which team has won the most English Premier League titles?", opts: ["Manchester United", "Liverpool", "Arsenal", "Chelsea"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the name of the FIFA World Cup trophy?", opts: ["Jules Rimet", "FIFA Cup", "World Cup", "Golden Cup"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What color is a standard soccer ball?", opts: ["White", "Black/White", "Orange", "Yellow"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "Which country hosted the 2018 World Cup?", opts: ["Russia", "Brazil", "Germany", "South Africa"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the term for a goal scored by a header?", opts: ["Header goal", "Flying goal", "Bicycle kick", "Volley"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the distance of the penalty arc from the penalty spot?", opts: ["9.15 m", "10 m", "11 m", "12 m"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which continent has the most World Cup winners?", opts: ["Europe", "South America", "Africa", "North America"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the height of a soccer goal?", opts: ["2.44 m", "2.5 m", "2.7 m", "3 m"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which player has the most international caps (men)?", opts: ["Cristiano Ronaldo", "Sergio Ramos", "Lionel Messi", "Ahmed Mubarak"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the most-watched annual soccer match?", opts: ["UCL Final", "World Cup Final", "El Clásico", "Super Bowl"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "What is the name of the Spanish top division?", opts: ["La Liga", "Serie A", "Bundesliga", "Ligue 1"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which Italian club has won the most Serie A titles?", opts: ["Juventus", "AC Milan", "Inter Milan", "Roma"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the term for a pass that splits the defense?", opts: ["Through ball", "Cross", "Lob", "Chip"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the maximum number of players on a soccer team (including substitutes)?", opts: ["18", "22", "25", "30"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which country has the most FIFA World Cup appearances?", opts: ["Brazil", "Germany", "Italy", "Argentina"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the name of the trophy awarded to the top scorer in the World Cup?", opts: ["Golden Boot", "Golden Ball", "Golden Glove", "Silver Boot"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the standard weight of a soccer ball?", opts: ["400 g", "410 g", "450 g", "500 g"], ans: 1, sport: "soccer", difficulty: "easy" },
+      { q: "Which team won the first FIFA World Cup in 1930?", opts: ["Uruguay", "Argentina", "Brazil", "Italy"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the name of the German national team?", opts: ["Die Mannschaft", "La Roja", "Azzurri", "Les Bleus"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the distance of the goal line to the penalty area?", opts: ["16.5 m", "18 m", "20 m", "22 m"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which club has the most UEFA Champions League titles?", opts: ["Real Madrid", "AC Milan", "Bayern Munich", "Liverpool"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the minimum number of players needed to start a match?", opts: ["7", "8", "9", "10"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the name of the French national team?", opts: ["Les Bleus", "Die Mannschaft", "Azzurri", "La Roja"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "Which country hosted the 2014 World Cup?", opts: ["Brazil", "Germany", "South Africa", "France"], ans: 0, sport: "soccer", difficulty: "easy" },
+      { q: "What is the term for a goal scored from outside the box?", opts: ["Long-range goal", "Screamer", "Cracker", "All of the above"], ans: 3, sport: "soccer", difficulty: "easy" },
+      { q: "What is the most common formation in English football?", opts: ["4-4-2", "4-3-3", "3-5-2", "5-3-2"], ans: 0, sport: "soccer", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the name of the trophy awarded to the winner of the UEFA Champions League?", opts: ["Big Ears", "St. Bride", "Gold Cup", "Delaney"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which country has won the UEFA European Championship the most times?", opts: ["Germany", "Spain", "Italy", "France"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the record transfer fee paid for a soccer player (as of 2026)?", opts: ["€222M", "€200M", "€180M", "€250M"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has scored the most goals in a single World Cup tournament?", opts: ["Just Fontaine", "Pelé", "Ronaldo", "Miroslav Klose"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Italian national team?", opts: ["Azzurri", "La Roja", "Les Bleus", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has won the most FA Cup titles?", opts: ["Arsenal", "Manchester United", "Liverpool", "Chelsea"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the maximum number of yellow cards before a suspension?", opts: ["2", "3", "5", "10"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which country hosted the first World Cup in 1930?", opts: ["Uruguay", "Brazil", "Argentina", "Chile"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Spanish national team?", opts: ["La Roja", "Azzurri", "Les Bleus", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most assists in Premier League history?", opts: ["Ryan Giggs", "Frank Lampard", "Cesc Fàbregas", "Kevin De Bruyne"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Brazilian national team?", opts: ["Canarinho", "Albiceleste", "Azzurri", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which team won the 1998 World Cup?", opts: ["France", "Brazil", "Italy", "Germany"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the stadium where the 2026 World Cup final will be held?", opts: ["MetLife Stadium", "SoFi Stadium", "AT&T Stadium", "Levi's Stadium"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Who is the all-time top scorer for the Argentina national team?", opts: ["Lionel Messi", "Gabriel Batistuta", "Diego Maradona", "Sergio Agüero"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has the most Ligue 1 titles?", opts: ["PSG", "Saint-Étienne", "Marseille", "Monaco"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Dutch national team?", opts: ["Oranje", "La Roja", "Azzurri", "Les Bleus"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most Ballon d'Or wins?", opts: ["Lionel Messi", "Cristiano Ronaldo", "Michel Platini", "Johan Cruyff"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the English national team?", opts: ["Three Lions", "Les Bleus", "Azzurri", "La Roja"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has won the most Bundesliga titles?", opts: ["Bayern Munich", "Borussia Dortmund", "Mönchengladbach", "Hamburg"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the maximum number of players a team can have on the field after a red card?", opts: ["10", "9", "8", "7"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which country has the most Olympic gold medals in soccer?", opts: ["Brazil", "Argentina", "Uruguay", "Italy"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Argentine national team?", opts: ["Albiceleste", "Canarinho", "Azzurri", "La Roja"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has the most Serie A titles?", opts: ["Juventus", "AC Milan", "Inter Milan", "Roma"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the most goals scored by a player in a single World Cup match?", opts: ["5", "4", "6", "3"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which country has the most FIFA World Cup final appearances?", opts: ["Brazil", "Germany", "Italy", "Argentina"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Portuguese national team?", opts: ["Seleção", "La Roja", "Azzurri", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most Champions League goals?", opts: ["Cristiano Ronaldo", "Lionel Messi", "Robert Lewandowski", "Karim Benzema"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the stadium where the 2022 World Cup final was played?", opts: ["Lusail Stadium", "Khalifa Stadium", "Al Janoub", "Education City"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has the most Copa Libertadores titles?", opts: ["Independiente", "Boca Juniors", "River Plate", "Peñarol"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Mexican national team?", opts: ["El Tri", "La Roja", "Azzurri", "Les Bleus"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most World Cup appearances?", opts: ["Lionel Messi", "Cristiano Ronaldo", "Miroslav Klose", "Diego Maradona"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Nigerian national team?", opts: ["Super Eagles", "Indomitable Lions", "Black Stars", "Elephants"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has the most Premier League titles?", opts: ["Manchester United", "Liverpool", "Arsenal", "Manchester City"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Scottish national team?", opts: ["Tartan Army", "Three Lions", "La Roja", "Azzurri"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most goals in a single Premier League season?", opts: ["Erling Haaland", "Alan Shearer", "Mohamed Salah", "Cristiano Ronaldo"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Belgian national team?", opts: ["Red Devils", "La Roja", "Azzurri", "Die Mannschaft"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which club has the most Scottish Premiership titles?", opts: ["Celtic", "Rangers", "Aberdeen", "Hibernian"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Dutch top division?", opts: ["Eredivisie", "Serie A", "La Liga", "Bundesliga"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "Which player has the most assists in World Cup history?", opts: ["Lionel Messi", "Pelé", "Diego Maradona", "Miroslav Klose"], ans: 0, sport: "soccer", difficulty: "medium" },
+      { q: "What is the name of the Australian national team?", opts: ["Socceroos", "La Roja", "Azzurri", "Les Bleus"], ans: 0, sport: "soccer", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most goals scored by a team in a single World Cup match?", opts: ["10", "9", "8", "7"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most red cards in World Cup history?", opts: ["Zinedine Zidane", "Diego Maradona", "Cafu", "Pelé"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the total number of FIFA World Cups won by South American teams?", opts: ["10", "9", "8", "7"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which club has won the most Intercontinental Cups (now FIFA Club World Cup)?", opts: ["Real Madrid", "AC Milan", "Bayern Munich", "Barcelona"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the longest unbeaten run in soccer history?", opts: ["58 matches", "60", "65", "70"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most international goals for Brazil?", opts: ["Pelé", "Neymar", "Ronaldo", "Romário"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the stadium with the largest capacity in the world?", opts: ["Rungrado 1st of May", "Camp Nou", "Wembley", "Maracanã"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which country has the most women's World Cup titles?", opts: ["USA", "Germany", "Japan", "Norway"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record transfer fee for a goalkeeper?", opts: ["€80M", "€70M", "€60M", "€50M"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most goals in a single UEFA Champions League season?", opts: ["Cristiano Ronaldo", "Lionel Messi", "Robert Lewandowski", "Karim Benzema"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the African Cup of Nations trophy?", opts: ["African Cup", "Nations Cup", "Silver Cup", "Gold Cup"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which club has the most Copa América titles?", opts: ["Argentina", "Uruguay", "Brazil", "Chile"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most goals in a single World Cup by a player?", opts: ["13", "12", "11", "10"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most assists in La Liga history?", opts: ["Lionel Messi", "Cristiano Ronaldo", "Xavi", "Andrés Iniesta"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the oldest football competition in the world?", opts: ["FA Cup", "Scottish Cup", "UCL", "Copa América"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which country has the most UEFA Champions League final appearances?", opts: ["Spain", "England", "Italy", "Germany"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most saves in a World Cup match?", opts: ["15", "12", "10", "8"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most World Cup goals (all-time)?", opts: ["Miroslav Klose", "Ronaldo", "Gerd Müller", "Just Fontaine"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the Brazilian national team's nickname?", opts: ["Canarinho", "Albiceleste", "Azzurri", "La Roja"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which club has the most UEFA Super Cup titles?", opts: ["Real Madrid", "AC Milan", "Barcelona", "Bayern Munich"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in a league season?", opts: ["15", "13", "12", "10"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most Ballon d'Or awards without winning the World Cup?", opts: ["Lionel Messi", "Cristiano Ronaldo", "Michel Platini", "Johan Cruyff"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the Argentine top division?", opts: ["Primera División", "Serie A", "La Liga", "Bundesliga"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which country has the most Copa América titles?", opts: ["Argentina", "Uruguay", "Brazil", "Chile"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most goals in a single match by a player?", opts: ["5", "4", "6", "3"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most red cards in UCL history?", opts: ["Sergio Ramos", "Ramos", "Maldini", "Cafu"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the trophy awarded to the winner of the Copa América?", opts: ["Copa América", "Copa Libertadores", "Copa Sudamericana", "Recopa"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which club has the most FIFA Club World Cup titles?", opts: ["Real Madrid", "Barcelona", "Bayern Munich", "AC Milan"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most yellow cards in a single World Cup?", opts: ["16", "14", "12", "10"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most assists in UCL history?", opts: ["Cristiano Ronaldo", "Lionel Messi", "Ryan Giggs", "David Beckham"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the trophy awarded to the winner of the UEFA Europa League?", opts: ["Europa Cup", "UEFA Cup", "Silver Cup", "Gold Cup"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which country has the most FIFA World Cup wins by a single city?", opts: ["Brazil", "Uruguay", "Argentina", "Italy"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the most penalty saves in a World Cup shootout?", opts: ["4", "3", "5", "2"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most goals in a single Calcio (Serie A) season?", opts: ["Gonzalo Higuaín", "Luca Toni", "Cristiano Ronaldo", "Zlatan Ibrahimović"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the stadium where the first World Cup final was played?", opts: ["Centenario", "Maracanã", "Wembley", "Camp Nou"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which club has the most overall titles in world football?", opts: ["Real Madrid", "Barcelona", "Bayern Munich", "Al Ahly"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the record for the fastest hat-trick in soccer history?", opts: ["1 minute", "2 minutes", "3 minutes", "4 minutes"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which player has the most international goals (men)?", opts: ["Cristiano Ronaldo", "Lionel Messi", "Ali Daei", "Sunil Chhetri"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "What is the name of the trophy awarded to the winner of the African Cup of Nations?", opts: ["African Cup", "Nations Cup", "Silver Cup", "Gold Cup"], ans: 0, sport: "soccer", difficulty: "hard" },
+      { q: "Which country has the most FIFA World Cup wins by a continent?", opts: ["Europe", "South America", "Africa", "North America"], ans: 0, sport: "soccer", difficulty: "hard" },
+    ];
+    soccerPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- BASKETBALL (120 items) ----
+    const basketballPool = [
+      // easy (40)
+      { q: "How many players are on a basketball team on the court?", opts: ["4", "5", "6", "7"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "What is the value of a free throw?", opts: ["1 point", "2 points", "3 points", "4 points"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "How long is an NBA quarter?", opts: ["10 min", "11 min", "12 min", "15 min"], ans: 2, sport: "basketball", difficulty: "easy" },
+      { q: "What is the maximum number of players allowed on a basketball roster (NBA)?", opts: ["12", "13", "15", "18"], ans: 2, sport: "basketball", difficulty: "easy" },
+      { q: "What is the distance of the three-point line in the NBA?", opts: ["6.25 m", "6.75 m", "7.24 m", "7.5 m"], ans: 2, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA team has won the most championships?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "What is the diameter of a basketball hoop (rim)?", opts: ["45 cm", "46 cm", "47 cm", "48 cm"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which country is basketball most popular in?", opts: ["USA", "China", "Spain", "Argentina"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the maximum number of fouls a player can commit before fouling out in the NBA?", opts: ["5", "6", "7", "8"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "What is the length of a standard basketball court (NBA)?", opts: ["28 m", "28.65 m", "30 m", "32 m"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "What is the weight of a standard basketball?", opts: ["600 g", "620 g", "650 g", "700 g"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA player is known as 'The Greek Freak'?", opts: ["Giannis Antetokounmpo", "Luka Dončić", "Nikola Jokić", "Joel Embiid"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the shot clock duration in the NBA?", opts: ["20 s", "24 s", "30 s", "35 s"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the NBA championship trophy?", opts: ["Larry O'Brien", "NBA Cup", "Gold Cup", "Silver Cup"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which player has scored the most points in a single NBA game?", opts: ["Wilt Chamberlain", "Kobe Bryant", "Michael Jordan", "LeBron James"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the width of a basketball court?", opts: ["15 m", "16 m", "17 m", "18 m"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which team has the most NBA Finals appearances?", opts: ["Lakers", "Celtics", "Warriors", "Bulls"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Spanish top basketball league?", opts: ["ACB", "Liga Endesa", "Serie A", "Bundesliga"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the maximum number of timeouts per team in an NBA game?", opts: ["6", "7", "8", "9"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "Which country won the most Olympic gold medals in basketball (men)?", opts: ["USA", "Soviet Union", "Argentina", "Spain"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the height of the basketball hoop from the floor?", opts: ["3.05 m", "3.15 m", "3.25 m", "3.35 m"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA team is based in Los Angeles?", opts: ["Lakers", "Clippers", "Both", "None"], ans: 2, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Turkish basketball league?", opts: ["BSL", "TBL", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which player has the most triple-doubles in NBA history?", opts: ["Russell Westbrook", "Oscar Robertson", "LeBron James", "Magic Johnson"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the EuroLeague trophy?", opts: ["EuroLeague Cup", "Alba Cup", "Gold Cup", "Silver Cup"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA player has the most 3-pointers made?", opts: ["Stephen Curry", "Ray Allen", "Reggie Miller", "James Harden"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the shot clock duration in FIBA basketball?", opts: ["20 s", "24 s", "30 s", "35 s"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "Which country has the most EuroLeague titles?", opts: ["Spain", "Turkey", "Greece", "Italy"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Greek basketball league?", opts: ["GBL", "HEBA", "ACB", "Liga Endesa"], ans: 1, sport: "basketball", difficulty: "easy" },
+      { q: "Which player has the most MVP awards in NBA history?", opts: ["Kareem Abdul-Jabbar", "Michael Jordan", "LeBron James", "Bill Russell"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the maximum number of fouls in FIBA before disqualification?", opts: ["5", "6", "7", "8"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA team has the most retired jersey numbers?", opts: ["Celtics", "Lakers", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Japanese basketball league?", opts: ["B.League", "JBL", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which player has the most steals in NBA history?", opts: ["John Stockton", "Michael Jordan", "Gary Payton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Australian basketball league?", opts: ["NBL", "ACB", "Liga Endesa", "Serie A"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA player is known as 'The Process'?", opts: ["Joel Embiid", "Ben Simmons", "Michael Jordan", "LeBron James"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the maximum number of players on an NBA roster?", opts: ["15", "17", "18", "20"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which country has the most NBA players?", opts: ["USA", "Canada", "Australia", "France"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "What is the name of the Italian basketball league?", opts: ["LBA", "Serie A", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "easy" },
+      { q: "Which NBA player has the most assists in a single game?", opts: ["Scott Skiles", "Magic Johnson", "John Stockton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "easy" },
+      // medium (40)
+      { q: "Who is the all-time leading scorer in NBA history?", opts: ["LeBron James", "Kareem Abdul-Jabbar", "Michael Jordan", "Kobe Bryant"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which team has the most NBA championships (as of 2026)?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the record for points in a single NBA game?", opts: ["100", "101", "102", "103"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most MVP awards?", opts: ["Kareem Abdul-Jabbar", "Michael Jordan", "LeBron James", "Bill Russell"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the maximum number of timeouts in the NBA?", opts: ["6", "7", "8", "9"], ans: 1, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA team has the most retired numbers?", opts: ["Celtics", "Lakers", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Who has the most assists in NBA history?", opts: ["John Stockton", "Chris Paul", "Magic Johnson", "LeBron James"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the record for most 3-pointers in a single game?", opts: ["14", "13", "15", "12"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most steals in NBA history?", opts: ["John Stockton", "Michael Jordan", "Gary Payton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the trophy awarded to the NBA Finals MVP?", opts: ["Bill Russell", "Larry O'Brien", "NBA Cup", "Gold Cup"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which country has the most EuroLeague titles?", opts: ["Spain", "Turkey", "Greece", "Italy"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the shot clock duration in FIBA?", opts: ["20 s", "24 s", "30 s", "35 s"], ans: 1, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most blocks in NBA history?", opts: ["Hakeem Olajuwon", "Dikembe Mutombo", "Kareem Abdul-Jabbar", "Tim Duncan"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Spanish basketball league?", opts: ["ACB", "Liga Endesa", "Serie A", "Bundesliga"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA player is known as 'The Greek Freak'?", opts: ["Giannis Antetokounmpo", "Luka Dončić", "Nikola Jokić", "Joel Embiid"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the maximum number of fouls in NBA before disqualification?", opts: ["5", "6", "7", "8"], ans: 1, sport: "basketball", difficulty: "medium" },
+      { q: "Which team has the most NBA Finals appearances?", opts: ["Lakers", "Celtics", "Warriors", "Bulls"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Turkish basketball league?", opts: ["BSL", "TBL", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most triple-doubles in NBA history?", opts: ["Russell Westbrook", "Oscar Robertson", "LeBron James", "Magic Johnson"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the EuroLeague trophy?", opts: ["EuroLeague Cup", "Alba Cup", "Gold Cup", "Silver Cup"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA player has the most 3-pointers made?", opts: ["Stephen Curry", "Ray Allen", "Reggie Miller", "James Harden"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the shot clock duration in FIBA basketball?", opts: ["20 s", "24 s", "30 s", "35 s"], ans: 1, sport: "basketball", difficulty: "medium" },
+      { q: "Which country has the most EuroLeague titles?", opts: ["Spain", "Turkey", "Greece", "Italy"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Greek basketball league?", opts: ["GBL", "HEBA", "ACB", "Liga Endesa"], ans: 1, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most MVP awards in NBA history?", opts: ["Kareem Abdul-Jabbar", "Michael Jordan", "LeBron James", "Bill Russell"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the maximum number of fouls in FIBA before disqualification?", opts: ["5", "6", "7", "8"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA team has the most retired jersey numbers?", opts: ["Celtics", "Lakers", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Japanese basketball league?", opts: ["B.League", "JBL", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which player has the most steals in NBA history?", opts: ["John Stockton", "Michael Jordan", "Gary Payton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Australian basketball league?", opts: ["NBL", "ACB", "Liga Endesa", "Serie A"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA player is known as 'The Process'?", opts: ["Joel Embiid", "Ben Simmons", "Michael Jordan", "LeBron James"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the maximum number of players on an NBA roster?", opts: ["15", "17", "18", "20"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which country has the most NBA players?", opts: ["USA", "Canada", "Australia", "France"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Italian basketball league?", opts: ["LBA", "Serie A", "ACB", "Liga Endesa"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA player has the most assists in a single game?", opts: ["Scott Skiles", "Magic Johnson", "John Stockton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the French basketball league?", opts: ["LNB", "ACB", "Liga Endesa", "Serie A"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA player has the most rebounds in a single game?", opts: ["Wilt Chamberlain", "Bill Russell", "Kareem Abdul-Jabbar", "Dennis Rodman"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the German basketball league?", opts: ["BBL", "ACB", "Liga Endesa", "Serie A"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "Which NBA team has the most wins in a single season?", opts: ["Warriors", "Bulls", "Lakers", "Celtics"], ans: 0, sport: "basketball", difficulty: "medium" },
+      { q: "What is the name of the Argentine basketball league?", opts: ["LNB", "ACB", "Liga Endesa", "Serie A"], ans: 0, sport: "basketball", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most consecutive wins in NBA history?", opts: ["33", "32", "31", "30"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career points in the NBA playoffs?", opts: ["LeBron James", "Michael Jordan", "Kareem Abdul-Jabbar", "Kobe Bryant"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Conference Finals MVP?", opts: ["Larry Bird", "Magic Johnson", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships without a losing season?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most 3-pointers in an NBA Finals game?", opts: ["9", "8", "7", "6"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most Finals MVPs?", opts: ["Michael Jordan", "LeBron James", "Magic Johnson", "Kareem Abdul-Jabbar"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most blocks in a single NBA game?", opts: ["17", "15", "14", "12"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which NBA team has the most retired numbers?", opts: ["Celtics", "Lakers", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most assists in a single NBA game?", opts: ["30", "28", "27", "25"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most steals in a single game?", opts: ["11", "10", "9", "8"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Rookie of the Year?", opts: ["Eddie Gottlieb", "Larry O'Brien", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championship wins with a losing record?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most points in an NBA Finals game?", opts: ["61", "60", "59", "58"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career assists in NBA history?", opts: ["John Stockton", "Chris Paul", "Magic Johnson", "LeBron James"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most rebounds in an NBA Finals game?", opts: ["40", "38", "36", "35"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which NBA team has the most playoff appearances?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Defensive Player of the Year?", opts: ["Hakeem Olajuwon", "Bill Russell", "Larry O'Brien", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career blocks in NBA history?", opts: ["Hakeem Olajuwon", "Dikembe Mutombo", "Kareem Abdul-Jabbar", "Tim Duncan"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most free throws made in a single game?", opts: ["28", "27", "26", "25"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships in the 21st century?", opts: ["Lakers", "Spurs", "Warriors", "Heat"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA All-Star Game MVP?", opts: ["Kobe Bryant", "Michael Jordan", "LeBron James", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career points in the NBA regular season?", opts: ["LeBron James", "Kareem Abdul-Jabbar", "Michael Jordan", "Kobe Bryant"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most wins in an NBA season?", opts: ["73", "72", "71", "70"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which NBA player has the most career triple-doubles?", opts: ["Russell Westbrook", "Oscar Robertson", "LeBron James", "Magic Johnson"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Sixth Man of the Year?", opts: ["John Havlicek", "Larry O'Brien", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships in the 1970s?", opts: ["Celtics", "Lakers", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most 3-pointers in an NBA season?", opts: ["402", "400", "398", "395"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career steals in NBA history?", opts: ["John Stockton", "Michael Jordan", "Gary Payton", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Most Improved Player?", opts: ["George Mikan", "Larry O'Brien", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships in the 1980s?", opts: ["Lakers", "Celtics", "Bulls", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most points in an NBA All-Star Game?", opts: ["52", "51", "50", "49"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career blocks in NBA playoff history?", opts: ["Tim Duncan", "Hakeem Olajuwon", "Kareem Abdul-Jabbar", "Shaquille O'Neal"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Clutch Player of the Year?", opts: ["Jerry West", "Larry O'Brien", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships in the 1990s?", opts: ["Bulls", "Lakers", "Celtics", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most rebounds in an NBA season?", opts: ["55", "50", "45", "40"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career assists in NBA playoff history?", opts: ["Magic Johnson", "John Stockton", "LeBron James", "Chris Paul"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the name of the trophy for the NBA Coach of the Year?", opts: ["Red Auerbach", "Larry O'Brien", "Bill Russell", "NBA Cup"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which team has the most NBA championships in the 2000s?", opts: ["Lakers", "Spurs", "Celtics", "Warriors"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "What is the record for the most points in an NBA playoff game?", opts: ["63", "62", "61", "60"], ans: 0, sport: "basketball", difficulty: "hard" },
+      { q: "Which player has the most career rebounds in NBA history?", opts: ["Wilt Chamberlain", "Bill Russell", "Kareem Abdul-Jabbar", "Dennis Rodman"], ans: 0, sport: "basketball", difficulty: "hard" },
+    ];
+    basketballPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- TENNIS (120 items) ----
+    const tennisPool = [
+      // easy (40)
+      { q: "How many points are in a tennis game?", opts: ["4", "5", "6", "7"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is played on grass?", opts: ["Australian Open", "French Open", "Wimbledon", "US Open"], ans: 2, sport: "tennis", difficulty: "easy" },
+      { q: "What is the scoring term for zero in tennis?", opts: ["Love", "Nil", "Zero", "None"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "How many serves does a player get per point?", opts: ["1", "2", "3", "4"], ans: 1, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is played on clay?", opts: ["Australian Open", "French Open", "Wimbledon", "US Open"], ans: 1, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the tennis shot where the ball is struck before it bounces?", opts: ["Volley", "Groundstroke", "Lob", "Slice"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "How many points are needed to win a tiebreak?", opts: ["7", "6", "8", "5"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which country hosts the French Open?", opts: ["France", "England", "USA", "Australia"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the maximum number of sets in a men's Grand Slam match?", opts: ["3", "5", "7", "9"], ans: 1, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is the last of the calendar year?", opts: ["Australian Open", "French Open", "Wimbledon", "US Open"], ans: 3, sport: "tennis", difficulty: "easy" },
+      { q: "What is the surface of Wimbledon?", opts: ["Grass", "Clay", "Hard", "Carpet"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the shot that is hit with a lot of backspin?", opts: ["Slice", "Topspin", "Flat", "Lob"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which player has won the most Grand Slam singles titles (women)?", opts: ["Margaret Court", "Serena Williams", "Steffi Graf", "Martina Navratilova"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the maximum number of sets in a women's Grand Slam match?", opts: ["3", "5", "7", "9"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which country hosts the Australian Open?", opts: ["Australia", "France", "USA", "England"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the tennis shot that is hit high over the opponent?", opts: ["Lob", "Volley", "Smash", "Drop shot"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the standard height of a tennis net at the center?", opts: ["0.914 m", "1.0 m", "1.1 m", "0.8 m"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is played on hard court?", opts: ["Australian Open", "French Open", "Wimbledon", "US Open"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the term for a serve that is not returned?", opts: ["Ace", "Winner", "Service winner", "Let"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "How many games are in a tennis set (usually)?", opts: ["6", "7", "8", "5"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the shot that is hit immediately after the bounce?", opts: ["Groundstroke", "Volley", "Half-volley", "Lob"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which player has the most Grand Slam titles (men)?", opts: ["Novak Djokovic", "Rafael Nadal", "Roger Federer", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the tennis court surface that is made of crushed brick?", opts: ["Clay", "Grass", "Hard", "Carpet"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the term for a point won after a long rally?", opts: ["Rally winner", "Long point", "Grinder point", "None"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which country hosts the US Open?", opts: ["USA", "France", "England", "Australia"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the maximum number of players on a tennis doubles team?", opts: ["2", "3", "4", "5"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the term for a shot that goes long?", opts: ["Out", "Fault", "Let", "Wide"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is the first of the calendar year?", opts: ["Australian Open", "French Open", "Wimbledon", "US Open"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the shot that is hit with a lot of topspin?", opts: ["Topspin", "Slice", "Flat", "Lob"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the standard width of a tennis court for singles?", opts: ["8.23 m", "10.97 m", "12.0 m", "9.0 m"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which player has the most Wimbledon titles (women)?", opts: ["Martina Navratilova", "Serena Williams", "Steffi Graf", "Margaret Court"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the term for a serve that touches the net and lands in?", opts: ["Let", "Ace", "Fault", "Winner"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which country is known for producing the most tennis players?", opts: ["USA", "Spain", "France", "Australia"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the tennis tournament held in Paris?", opts: ["French Open", "Paris Masters", "Roland Garros", "Both A and C"], ans: 3, sport: "tennis", difficulty: "easy" },
+      { q: "What is the maximum number of sets in a Wimbledon final?", opts: ["3", "5", "7", "9"], ans: 1, sport: "tennis", difficulty: "easy" },
+      { q: "Which player has the most French Open titles (men)?", opts: ["Rafael Nadal", "Novak Djokovic", "Roger Federer", "Björn Borg"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the shot that is hit softly over the net?", opts: ["Drop shot", "Lob", "Volley", "Slice"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "Which Grand Slam is played on hard court in New York?", opts: ["US Open", "Australian Open", "French Open", "Wimbledon"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the term for a point where the server wins?", opts: ["Hold", "Break", "Service winner", "Ace"], ans: 0, sport: "tennis", difficulty: "easy" },
+      { q: "What is the name of the tennis court surface that is made of concrete?", opts: ["Hard", "Clay", "Grass", "Carpet"], ans: 0, sport: "tennis", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the record for the most aces in a single tennis match?", opts: ["113", "100", "90", "80"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Grand Slam titles in the Open Era (men)?", opts: ["Novak Djokovic", "Rafael Nadal", "Roger Federer", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in London?", opts: ["Wimbledon", "ATP Finals", "Queen's Club", "Both B and C"], ans: 3, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Grand Slam titles in the Open Era (women)?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the longest tennis match in history (by time)?", opts: ["11 hours", "10 hours", "9 hours", "8 hours"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Wimbledon titles (men)?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the trophy awarded at Wimbledon?", opts: ["Gentlemen's Singles Trophy", "Ladies' Singles Trophy", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which country has the most Davis Cup titles?", opts: ["USA", "Australia", "Great Britain", "Spain"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most Grand Slam titles in a single season (women)?", opts: ["4", "3", "2", "1"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most US Open titles (men)?", opts: ["Jimmy Connors", "Pete Sampras", "Roger Federer", "Novak Djokovic"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Indian Wells?", opts: ["Indian Wells Masters", "BNP Paribas Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most French Open titles (women)?", opts: ["Chris Evert", "Steffi Graf", "Serena Williams", "Monica Seles"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most consecutive weeks at No.1 (men)?", opts: ["310", "300", "290", "280"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most ATP titles?", opts: ["Jimmy Connors", "Roger Federer", "Novak Djokovic", "Rafael Nadal"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Monte Carlo?", opts: ["Monte Carlo Masters", "Rolex Monte Carlo", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most WTA titles?", opts: ["Martina Navratilova", "Serena Williams", "Steffi Graf", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most aces in a Wimbledon match?", opts: ["113", "100", "90", "80"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which country has the most Fed Cup titles?", opts: ["USA", "Australia", "Czech Republic", "Spain"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Madrid?", opts: ["Madrid Open", "Mutua Madrid Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most US Open titles (women)?", opts: ["Serena Williams", "Chris Evert", "Steffi Graf", "Martina Navratilova"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most Grand Slam match wins (men)?", opts: ["400", "380", "360", "340"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Australian Open titles (men)?", opts: ["Novak Djokovic", "Roger Federer", "Rafael Nadal", "Roy Emerson"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Rome?", opts: ["Italian Open", "Internazionali BNL d'Italia", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Australian Open titles (women)?", opts: ["Serena Williams", "Margaret Court", "Steffi Graf", "Monica Seles"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most consecutive Grand Slam titles (men)?", opts: ["6", "5", "4", "3"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Grand Slam titles in the Open Era (men)?", opts: ["Novak Djokovic", "Rafael Nadal", "Roger Federer", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Toronto/Montreal?", opts: ["Canadian Open", "Rogers Cup", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Grand Slam titles in the Open Era (women)?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most aces in a French Open match?", opts: ["100", "90", "80", "70"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which country has the most Olympic gold medals in tennis?", opts: ["USA", "Great Britain", "Spain", "Russia"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Shanghai?", opts: ["Shanghai Masters", "Rolex Shanghai", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Wimbledon titles in the Open Era (men)?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most Grand Slam titles in a single season (men)?", opts: ["3", "4", "5", "6"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most French Open titles in the Open Era (women)?", opts: ["Chris Evert", "Steffi Graf", "Serena Williams", "Monica Seles"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Paris (indoor)?", opts: ["Paris Masters", "Rolex Paris", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most US Open titles in the Open Era (men)?", opts: ["Jimmy Connors", "Pete Sampras", "Roger Federer", "Novak Djokovic"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the record for the most Grand Slam match wins (women)?", opts: ["400", "380", "360", "340"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Australian Open titles in the Open Era (men)?", opts: ["Novak Djokovic", "Roger Federer", "Rafael Nadal", "Roy Emerson"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "What is the name of the tennis tournament in Cincinnati?", opts: ["Cincinnati Masters", "Western & Southern Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "medium" },
+      { q: "Which player has the most Australian Open titles in the Open Era (women)?", opts: ["Serena Williams", "Margaret Court", "Steffi Graf", "Monica Seles"], ans: 0, sport: "tennis", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most aces in a Davis Cup match?", opts: ["113", "100", "90", "80"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most career wins in the Open Era (men)?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Jimmy Connors"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Hamburg?", opts: ["Hamburg Open", "German Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most career wins in the Open Era (women)?", opts: ["Martina Navratilova", "Serena Williams", "Steffi Graf", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most consecutive match wins in tennis (men)?", opts: ["74", "70", "65", "60"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most titles in the Open Era (men)?", opts: ["Jimmy Connors", "Roger Federer", "Novak Djokovic", "Rafael Nadal"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Vienna?", opts: ["Vienna Open", "Erste Bank Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most titles in the Open Era (women)?", opts: ["Martina Navratilova", "Serena Williams", "Steffi Graf", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most aces in a year (men)?", opts: ["1000", "900", "800", "700"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most Grand Slam singles titles in the Open Era (men)?", opts: ["Novak Djokovic", "Rafael Nadal", "Roger Federer", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Stockholm?", opts: ["Stockholm Open", "Swedish Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most Grand Slam singles titles in the Open Era (women)?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most consecutive weeks at No.1 (women)?", opts: ["377", "350", "330", "310"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most ATP 500 titles?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Andy Murray"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Basel?", opts: ["Swiss Indoors", "Basel Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most WTA 1000 titles?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most aces in a US Open match?", opts: ["113", "100", "90", "80"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which country has the most Hopman Cup titles?", opts: ["USA", "Spain", "Australia", "Russia"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Stuttgart?", opts: ["Stuttgart Open", "Mercedes Cup", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most ATP 250 titles?", opts: ["Jimmy Connors", "Roger Federer", "Novak Djokovic", "Rafael Nadal"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most Grand Slam match wins in a year (men)?", opts: ["40", "38", "36", "34"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most WTA 500 titles?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Rotterdam?", opts: ["Rotterdam Open", "ABN AMRO Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most WTA 250 titles?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most aces in a match by a woman?", opts: ["100", "90", "80", "70"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which country has the most Olympic medals in tennis?", opts: ["USA", "Great Britain", "France", "Spain"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Doha?", opts: ["Qatar Open", "Qatar ExxonMobil Open", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most ATP finals appearances?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Ivan Lendl"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most consecutive match wins in tennis (women)?", opts: ["74", "70", "65", "60"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most WTA finals appearances?", opts: ["Martina Navratilova", "Serena Williams", "Steffi Graf", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Dubai?", opts: ["Dubai Open", "Dubai Duty Free", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most Davis Cup wins?", opts: ["John McEnroe", "Jimmy Connors", "Pete Sampras", "Novak Djokovic"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most Grand Slam titles in a year by a player?", opts: ["4", "3", "2", "1"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most Fed Cup wins?", opts: ["Serena Williams", "Chris Evert", "Martina Navratilova", "Steffi Graf"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Acapulco?", opts: ["Mexican Open", "Abierto Mexicano", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most ATP 500 titles in a single season?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Andy Murray"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the record for the most aces in a match by a man?", opts: ["113", "100", "90", "80"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most WTA 1000 titles in a single season?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "What is the name of the tennis tournament in Rio de Janeiro?", opts: ["Rio Open", "Abierto de Rio", "Both", "None"], ans: 0, sport: "tennis", difficulty: "hard" },
+      { q: "Which player has the most ATP finals titles?", opts: ["Roger Federer", "Novak Djokovic", "Rafael Nadal", "Pete Sampras"], ans: 0, sport: "tennis", difficulty: "hard" },
+    ];
+    tennisPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- RACING (100+ items) ----
+    const racingPool = [
+      // easy (40)
+      { q: "How many wheels does a Formula 1 car have?", opts: ["3", "4", "5", "6"], ans: 1, sport: "racing", difficulty: "easy" },
+      { q: "What is the top speed of an F1 car (approx.)?", opts: ["350 km/h", "300 km/h", "320 km/h", "380 km/h"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Monaco Grand Prix?", opts: ["Monaco", "France", "Italy", "Spain"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 championship trophy?", opts: ["World Cup", "F1 Cup", "Gold Cup", "Silver Cup"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "How many points does a race winner get in F1?", opts: ["25", "26", "28", "30"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "Which company is known for producing F1 engines?", opts: ["Ferrari", "Mercedes", "Honda", "All of the above"], ans: 3, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the famous 24-hour race in France?", opts: ["Le Mans", "Monaco", "Spa", "Nürburgring"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Italian Grand Prix?", opts: ["Italy", "France", "Germany", "Spain"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the American IndyCar series?", opts: ["IndyCar", "NASCAR", "F1", "WEC"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "Which driver has the most F1 world championships?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Alain Prost"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Belgium?", opts: ["Belgian Grand Prix", "Spa", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the British Grand Prix?", opts: ["UK", "France", "Germany", "Italy"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Spain?", opts: ["Spanish Grand Prix", "Catalan Grand Prix", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Canadian Grand Prix?", opts: ["Canada", "USA", "Mexico", "Brazil"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Japan?", opts: ["Japanese Grand Prix", "Suzuka", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Australian Grand Prix?", opts: ["Australia", "New Zealand", "UK", "USA"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Brazil?", opts: ["Brazilian Grand Prix", "Interlagos", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the German Grand Prix?", opts: ["Germany", "France", "Italy", "Spain"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Hungary?", opts: ["Hungarian Grand Prix", "Budapest", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Mexican Grand Prix?", opts: ["Mexico", "USA", "Canada", "Brazil"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in the Netherlands?", opts: ["Dutch Grand Prix", "Zandvoort", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Singapore Grand Prix?", opts: ["Singapore", "Malaysia", "Indonesia", "Thailand"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Russia?", opts: ["Russian Grand Prix", "Sochi", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Abu Dhabi Grand Prix?", opts: ["UAE", "Saudi Arabia", "Qatar", "Bahrain"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Turkey?", opts: ["Turkish Grand Prix", "Istanbul", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Belgian Grand Prix?", opts: ["Belgium", "Netherlands", "France", "Germany"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Italy?", opts: ["Italian Grand Prix", "Monza", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the French Grand Prix?", opts: ["France", "Italy", "Spain", "Germany"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in the USA?", opts: ["United States Grand Prix", "COTA", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Chinese Grand Prix?", opts: ["China", "Japan", "South Korea", "Taiwan"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Mexico?", opts: ["Mexican Grand Prix", "Mexico City", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Brazilian Grand Prix?", opts: ["Brazil", "Argentina", "Chile", "Peru"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Spain?", opts: ["Spanish Grand Prix", "Barcelona", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Canadian Grand Prix?", opts: ["Canada", "USA", "Mexico", "Brazil"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Japan?", opts: ["Japanese Grand Prix", "Suzuka", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Australian Grand Prix?", opts: ["Australia", "New Zealand", "UK", "USA"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Brazil?", opts: ["Brazilian Grand Prix", "Interlagos", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the German Grand Prix?", opts: ["Germany", "France", "Italy", "Spain"], ans: 0, sport: "racing", difficulty: "easy" },
+      { q: "What is the name of the F1 race in Hungary?", opts: ["Hungarian Grand Prix", "Budapest", "Both", "None"], ans: 2, sport: "racing", difficulty: "easy" },
+      { q: "Which country hosts the Mexican Grand Prix?", opts: ["Mexico", "USA", "Canada", "Brazil"], ans: 0, sport: "racing", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the record for the most F1 wins by a driver?", opts: ["103", "100", "95", "90"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles?", opts: ["Ferrari", "Mercedes", "Williams", "McLaren"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the most famous corner at Spa?", opts: ["Eau Rouge", "Radillon", "Both", "None"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 poles?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most consecutive F1 wins?", opts: ["10", "9", "8", "7"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most wins?", opts: ["Ferrari", "Mercedes", "Williams", "McLaren"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the street circuit in Monaco?", opts: ["Circuit de Monaco", "Monte Carlo", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 titles in a row?", opts: ["Michael Schumacher", "Lewis Hamilton", "Sebastian Vettel", "Juan Manuel Fangio"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 points in a season?", opts: ["500", "450", "400", "350"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in a row?", opts: ["Mercedes", "Ferrari", "Williams", "McLaren"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Canada?", opts: ["Canadian Grand Prix", "Montreal", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 podiums?", opts: ["Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel", "Alain Prost"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 fastest laps?", opts: ["77", "75", "70", "65"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 2000s?", opts: ["Ferrari", "Mercedes", "Renault", "McLaren"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Japan?", opts: ["Japanese Grand Prix", "Suzuka", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins at a single circuit?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 wins in a season?", opts: ["15", "14", "13", "12"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 2010s?", opts: ["Mercedes", "Red Bull", "Ferrari", "McLaren"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Australia?", opts: ["Australian Grand Prix", "Melbourne", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 championships by age?", opts: ["Sebastian Vettel", "Lewis Hamilton", "Michael Schumacher", "Ayrton Senna"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 points in a single race?", opts: ["26", "25", "24", "23"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 1990s?", opts: ["Williams", "Ferrari", "McLaren", "Benetton"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Brazil?", opts: ["Brazilian Grand Prix", "Interlagos", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins from pole?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 podiums in a season?", opts: ["17", "16", "15", "14"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 1980s?", opts: ["McLaren", "Ferrari", "Williams", "Lotus"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Italy?", opts: ["Italian Grand Prix", "Monza", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins in a season?", opts: ["Max Verstappen", "Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 fastest laps in a season?", opts: ["10", "9", "8", "7"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 1970s?", opts: ["Lotus", "Ferrari", "McLaren", "Williams"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Spain?", opts: ["Spanish Grand Prix", "Barcelona", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins at Monaco?", opts: ["Ayrton Senna", "Lewis Hamilton", "Michael Schumacher", "Graham Hill"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 wins in a row by a team?", opts: ["11", "10", "9", "8"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 1960s?", opts: ["Lotus", "Ferrari", "McLaren", "Cooper"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in the USA?", opts: ["United States Grand Prix", "COTA", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins at Silverstone?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Nigel Mansell"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the record for the most F1 points in a career?", opts: ["5000", "4500", "4000", "3500"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "Which F1 team has the most constructors' titles in the 1950s?", opts: ["Ferrari", "Maserati", "Mercedes", "Alfa Romeo"], ans: 0, sport: "racing", difficulty: "medium" },
+      { q: "What is the name of the F1 race in Germany?", opts: ["German Grand Prix", "Hockenheim", "Both", "None"], ans: 2, sport: "racing", difficulty: "medium" },
+      { q: "Which driver has the most F1 wins at Monza?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most F1 poles in a season?", opts: ["18", "17", "16", "15"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles without a driver's title?", opts: ["Williams", "McLaren", "Lotus", "Brabham"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the most dangerous corner in F1?", opts: ["Eau Rouge", "130R", "Maggots", "Becketts"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins without a championship?", opts: ["Stirling Moss", "Gilles Villeneuve", "Ronnie Peterson", "Jacky Ickx"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 wins in a season by a team?", opts: ["18", "17", "16", "15"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V6 engine?", opts: ["Mercedes", "Red Bull", "Ferrari", "McLaren"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Turkey?", opts: ["Turkish Grand Prix", "Istanbul", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a single circuit (any circuit)?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 wins in a row by a driver?", opts: ["10", "9", "8", "7"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles in the hybrid era?", opts: ["Mercedes", "Red Bull", "Ferrari", "McLaren"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Austria?", opts: ["Austrian Grand Prix", "Red Bull Ring", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 fastest laps in a season?", opts: ["Michael Schumacher", "Lewis Hamilton", "Kimi Räikkönen", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 podiums in a row?", opts: ["20", "19", "18", "17"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V8 engine?", opts: ["Ferrari", "McLaren", "Williams", "Renault"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Portugal?", opts: ["Portuguese Grand Prix", "Algarve", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a season with a single team?", opts: ["Max Verstappen", "Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 points in a race without a win?", opts: ["18", "17", "16", "15"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V10 engine?", opts: ["Ferrari", "McLaren", "Williams", "Benetton"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Azerbaijan?", opts: ["Azerbaijan Grand Prix", "Baku", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a season without a championship?", opts: ["Valtteri Bottas", "Rubens Barrichello", "David Coulthard", "Felipe Massa"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 poles in a career?", opts: ["104", "100", "95", "90"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V12 engine?", opts: ["Ferrari", "Lamborghini", "Honda", "Toyota"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Saudi Arabia?", opts: ["Saudi Arabian Grand Prix", "Jeddah", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a row from pole?", opts: ["Lewis Hamilton", "Michael Schumacher", "Ayrton Senna", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 wins in a season by a constructor?", opts: ["19", "18", "17", "16"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a turbo engine?", opts: ["McLaren", "Williams", "Ferrari", "Renault"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Miami?", opts: ["Miami Grand Prix", "Hard Rock Stadium", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a season by a rookie?", opts: ["Lewis Hamilton", "Jacques Villeneuve", "Ayrton Senna", "Max Verstappen"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 points in a season by a team?", opts: ["800", "750", "700", "650"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V6 engine?", opts: ["Mercedes", "Red Bull", "Ferrari", "McLaren"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Las Vegas?", opts: ["Las Vegas Grand Prix", "Strip", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a single season by a team?", opts: ["Max Verstappen", "Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 podiums in a career?", opts: ["200", "190", "180", "170"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V8 engine?", opts: ["Ferrari", "McLaren", "Williams", "Renault"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Qatar?", opts: ["Qatar Grand Prix", "Lusail", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a season by a constructor?", opts: ["Max Verstappen", "Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the record for the most F1 fastest laps in a career?", opts: ["77", "75", "70", "65"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "Which F1 team has the most constructors' titles with a V10 engine?", opts: ["Ferrari", "McLaren", "Williams", "Benetton"], ans: 0, sport: "racing", difficulty: "hard" },
+      { q: "What is the name of the F1 race in Bahrain?", opts: ["Bahrain Grand Prix", "Sakhir", "Both", "None"], ans: 2, sport: "racing", difficulty: "hard" },
+      { q: "Which driver has the most F1 wins in a season by a driver?", opts: ["Max Verstappen", "Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel"], ans: 0, sport: "racing", difficulty: "hard" },
+    ];
+    racingPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- SWIMMING (120 items) ----
+    const swimmingPool = [
+      // easy (40)
+      { q: "Which stroke is not used in competitive swimming?", opts: ["Dog paddle", "Freestyle", "Backstroke", "Breaststroke"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the standard length of an Olympic pool?", opts: ["25 m", "30 m", "50 m", "100 m"], ans: 2, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is swum on the back?", opts: ["Backstroke", "Freestyle", "Breaststroke", "Butterfly"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming stroke that involves a dolphin kick?", opts: ["Butterfly", "Freestyle", "Backstroke", "Breaststroke"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "How many laps is a 1500m freestyle event in a 50m pool?", opts: ["30", "25", "20", "15"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is known as the fastest?", opts: ["Freestyle", "Butterfly", "Backstroke", "Breaststroke"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event that combines all four strokes?", opts: ["Individual Medley", "Medley Relay", "Freestyle", "None"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which country dominates Olympic swimming?", opts: ["USA", "Australia", "China", "Russia"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the maximum number of swimmers in a relay team?", opts: ["4", "5", "6", "7"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is the oldest competitive stroke?", opts: ["Breaststroke", "Freestyle", "Backstroke", "Butterfly"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 200m?", opts: ["200m Freestyle", "200m IM", "200m Butterfly", "All of the above"], ans: 3, sport: "swimming", difficulty: "easy" },
+      { q: "Which country has the most Olympic swimming medals?", opts: ["USA", "Australia", "China", "Russia"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming stroke that is swum with a flutter kick?", opts: ["Freestyle", "Backstroke", "Breaststroke", "Butterfly"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the distance of a marathon swim?", opts: ["10 km", "5 km", "25 km", "50 km"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is swum with a whip kick?", opts: ["Breaststroke", "Butterfly", "Backstroke", "Freestyle"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming relay event?", opts: ["Medley Relay", "Freestyle Relay", "Both", "None"], ans: 2, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer has the most Olympic gold medals?", opts: ["Michael Phelps", "Katie Ledecky", "Mark Spitz", "Jenny Thompson"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming stroke that is the most technical?", opts: ["Butterfly", "Breaststroke", "Backstroke", "Freestyle"], ans: 1, sport: "swimming", difficulty: "easy" },
+      { q: "Which country has the most gold medals in Olympic swimming?", opts: ["USA", "Australia", "China", "Russia"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 100m?", opts: ["100m Freestyle", "100m Backstroke", "100m Breaststroke", "All of the above"], ans: 3, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer is known as the 'Baltimore Bullet'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ryan Lochte", "Aaron Peirsol"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 50m?", opts: ["50m Freestyle", "50m Backstroke", "50m Breaststroke", "All of the above"], ans: 3, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is swum with a dolphin kick?", opts: ["Butterfly", "Freestyle", "Backstroke", "Breaststroke"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 400m?", opts: ["400m Freestyle", "400m IM", "400m Butterfly", "All of the above"], ans: 3, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer has the most world records?", opts: ["Michael Phelps", "Katie Ledecky", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming stroke that is the most natural?", opts: ["Freestyle", "Backstroke", "Breaststroke", "Butterfly"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which country has the most swimming world records?", opts: ["USA", "Australia", "China", "Russia"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 800m?", opts: ["800m Freestyle", "800m IM", "800m Butterfly", "None"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is swum with a scissor kick?", opts: ["Breaststroke", "Butterfly", "Backstroke", "Freestyle"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming relay event with four different strokes?", opts: ["Medley Relay", "Freestyle Relay", "Both", "None"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer is known as the 'Queen of the Pool'?", opts: ["Katie Ledecky", "Missy Franklin", "Simone Manuel", "Rebecca Soni"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 200m IM?", opts: ["200m Individual Medley", "200m IM", "Both", "None"], ans: 2, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is the most energy-consuming?", opts: ["Butterfly", "Breaststroke", "Backstroke", "Freestyle"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 1500m?", opts: ["1500m Freestyle", "1500m IM", "1500m Butterfly", "None"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer has the most Olympic medals?", opts: ["Michael Phelps", "Katie Ledecky", "Mark Spitz", "Jenny Thompson"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 100m IM?", opts: ["100m Individual Medley", "100m IM", "Both", "None"], ans: 2, sport: "swimming", difficulty: "easy" },
+      { q: "Which stroke is swum with a frog kick?", opts: ["Breaststroke", "Butterfly", "Backstroke", "Freestyle"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 4x100m relay?", opts: ["4x100m Freestyle Relay", "4x100m Medley Relay", "Both", "None"], ans: 2, sport: "swimming", difficulty: "easy" },
+      { q: "Which swimmer is known as the 'Fly King'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "easy" },
+      { q: "What is the name of the swimming event over 200m Freestyle?", opts: ["200m Freestyle", "200m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the world record for the 100m freestyle (men)?", opts: ["46.86", "47.00", "48.00", "49.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most individual Olympic gold medals?", opts: ["Michael Phelps", "Katie Ledecky", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming stroke that is the oldest?", opts: ["Breaststroke", "Freestyle", "Backstroke", "Butterfly"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 200m freestyle (women)?", opts: ["1:52.98", "1:53.00", "1:54.00", "1:55.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most world championships gold medals?", opts: ["Michael Phelps", "Katie Ledecky", "Missy Franklin", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event that combines backstroke, breaststroke, butterfly, and freestyle?", opts: ["Individual Medley", "Medley Relay", "Freestyle", "None"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 100m backstroke (men)?", opts: ["51.85", "52.00", "53.00", "54.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'Missile'?", opts: ["Caeleb Dressel", "Michael Phelps", "Ryan Lochte", "Aaron Peirsol"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 200m Butterfly?", opts: ["200m Butterfly", "200m Fly", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 200m breaststroke (women)?", opts: ["2:19.11", "2:20.00", "2:21.00", "2:22.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most Olympic gold medals in a single Games?", opts: ["Michael Phelps", "Mark Spitz", "Katie Ledecky", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 400m IM?", opts: ["400m Individual Medley", "400m IM", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 100m breaststroke (men)?", opts: ["57.13", "58.00", "59.00", "60.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'Baltimore Bullet'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ryan Lochte", "Aaron Peirsol"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 200m Backstroke?", opts: ["200m Backstroke", "200m Back", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 400m freestyle (women)?", opts: ["3:56.69", "3:57.00", "3:58.00", "3:59.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most world records in a single event?", opts: ["Katie Ledecky", "Michael Phelps", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 1500m Freestyle?", opts: ["1500m Freestyle", "1500m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 200m IM (men)?", opts: ["1:54.00", "1:55.00", "1:56.00", "1:57.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'Queen of the Pool'?", opts: ["Katie Ledecky", "Missy Franklin", "Simone Manuel", "Rebecca Soni"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 4x200m Freestyle Relay?", opts: ["4x200m Freestyle Relay", "4x200 Free Relay", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 800m freestyle (women)?", opts: ["8:04.79", "8:05.00", "8:06.00", "8:07.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most Olympic medals in a single Games?", opts: ["Michael Phelps", "Mark Spitz", "Katie Ledecky", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 200m Freestyle?", opts: ["200m Freestyle", "200m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 100m butterfly (men)?", opts: ["49.45", "49.50", "50.00", "50.50"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'Fly King'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 200m IM?", opts: ["200m Individual Medley", "200m IM", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 200m butterfly (women)?", opts: ["2:04.50", "2:05.00", "2:06.00", "2:07.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most world records in a single stroke?", opts: ["Michael Phelps", "Katie Ledecky", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 4x100m Medley Relay?", opts: ["4x100m Medley Relay", "4x100 Medley", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 400m IM (men)?", opts: ["4:03.84", "4:04.00", "4:05.00", "4:06.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'Missile'?", opts: ["Caeleb Dressel", "Michael Phelps", "Ryan Lochte", "Aaron Peirsol"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 100m Freestyle?", opts: ["100m Freestyle", "100m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 200m backstroke (men)?", opts: ["1:51.92", "1:52.00", "1:53.00", "1:54.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer has the most Olympic gold medals in freestyle?", opts: ["Katie Ledecky", "Michael Phelps", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 50m Freestyle?", opts: ["50m Freestyle", "50m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 100m breaststroke (women)?", opts: ["1:04.13", "1:04.50", "1:05.00", "1:05.50"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "Which swimmer is known as the 'King of the Pool'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "medium" },
+      { q: "What is the name of the swimming event over 200m Breaststroke?", opts: ["200m Breaststroke", "200m Breast", "Both", "None"], ans: 2, sport: "swimming", difficulty: "medium" },
+      { q: "What is the record for the 400m IM (women)?", opts: ["4:26.36", "4:27.00", "4:28.00", "4:29.00"], ans: 0, sport: "swimming", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most Olympic gold medals in a single event?", opts: ["8", "7", "6", "5"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most world championships titles in a single event?", opts: ["Katie Ledecky", "Michael Phelps", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event that is the most exhausting?", opts: ["1500m Freestyle", "200m Butterfly", "400m IM", "100m Butterfly"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 100m freestyle (women)?", opts: ["51.71", "52.00", "52.50", "53.00"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in a single Games (women)?", opts: ["Katie Ledecky", "Missy Franklin", "Simone Manuel", "Rebecca Soni"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event that is the most technical?", opts: ["200m IM", "400m IM", "100m Breaststroke", "200m Butterfly"], ans: 1, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 200m freestyle (men)?", opts: ["1:42.00", "1:42.50", "1:43.00", "1:43.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Freestyle Queen'?", opts: ["Katie Ledecky", "Simone Manuel", "Missy Franklin", "Rebecca Soni"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 200m Backstroke?", opts: ["200m Backstroke", "200m Back", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 400m freestyle (men)?", opts: ["3:40.00", "3:40.50", "3:41.00", "3:41.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in butterfly?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 1500m Freestyle?", opts: ["1500m Freestyle", "1500m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 100m backstroke (women)?", opts: ["57.45", "57.50", "58.00", "58.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Breaststroke King'?", opts: ["Adam Peaty", "Michael Phelps", "Caeleb Dressel", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 4x200m Freestyle Relay?", opts: ["4x200m Freestyle Relay", "4x200 Free Relay", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 200m breaststroke (men)?", opts: ["2:05.00", "2:05.50", "2:06.00", "2:06.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in breaststroke?", opts: ["Adam Peaty", "Michael Phelps", "Caeleb Dressel", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 100m Butterfly?", opts: ["100m Butterfly", "100m Fly", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 400m IM (men)?", opts: ["4:03.84", "4:04.00", "4:05.00", "4:06.00"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Backstroke King'?", opts: ["Aaron Peirsol", "Michael Phelps", "Caeleb Dressel", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 200m IM?", opts: ["200m Individual Medley", "200m IM", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 800m freestyle (men)?", opts: ["7:32.00", "7:33.00", "7:34.00", "7:35.00"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in backstroke?", opts: ["Aaron Peirsol", "Michael Phelps", "Caeleb Dressel", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 4x100m Medley Relay?", opts: ["4x100m Medley Relay", "4x100 Medley", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 200m butterfly (men)?", opts: ["1:50.34", "1:50.50", "1:51.00", "1:51.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Fly King'?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 50m Freestyle?", opts: ["50m Freestyle", "50m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 100m butterfly (women)?", opts: ["55.48", "55.50", "56.00", "56.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in freestyle?", opts: ["Katie Ledecky", "Michael Phelps", "Mark Spitz", "Ian Thorpe"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 200m Backstroke?", opts: ["200m Backstroke", "200m Back", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 400m IM (women)?", opts: ["4:26.36", "4:27.00", "4:28.00", "4:29.00"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Breaststroke Queen'?", opts: ["Rebecca Soni", "Lilly King", "Katie Ledecky", "Missy Franklin"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 200m Breaststroke?", opts: ["200m Breaststroke", "200m Breast", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 100m backstroke (men)?", opts: ["51.85", "51.90", "52.00", "52.10"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer has the most Olympic gold medals in butterfly?", opts: ["Michael Phelps", "Caeleb Dressel", "Ian Thorpe", "Ryan Lochte"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 4x200m Freestyle Relay?", opts: ["4x200m Freestyle Relay", "4x200 Free Relay", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 200m freestyle (men)?", opts: ["1:42.00", "1:42.50", "1:43.00", "1:43.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "Which swimmer is known as the 'Freestyle Queen'?", opts: ["Katie Ledecky", "Simone Manuel", "Missy Franklin", "Rebecca Soni"], ans: 0, sport: "swimming", difficulty: "hard" },
+      { q: "What is the name of the swimming event over 1500m Freestyle?", opts: ["1500m Freestyle", "1500m Free", "Both", "None"], ans: 2, sport: "swimming", difficulty: "hard" },
+      { q: "What is the record for the 100m butterfly (men)?", opts: ["49.45", "49.50", "50.00", "50.50"], ans: 0, sport: "swimming", difficulty: "hard" },
+    ];
+    swimmingPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- ATHLETICS (120 items) ----
+    const athleticsPool = [
+      // easy (40)
+      { q: "What is the distance of a marathon?", opts: ["42.195 km", "40 km", "38 km", "45 km"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the shortest in track and field?", opts: ["100m", "200m", "400m", "800m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the throwing event with a disc?", opts: ["Discus", "Javelin", "Shot put", "Hammer"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country dominates sprinting?", opts: ["USA", "Jamaica", "UK", "Russia"], ans: 1, sport: "athletics", difficulty: "easy" },
+      { q: "What is the length of a standard outdoor track?", opts: ["400m", "200m", "300m", "500m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event involves a pole for jumping?", opts: ["Pole vault", "High jump", "Long jump", "Triple jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the weight of a men's shot put?", opts: ["7.26 kg", "6 kg", "5 kg", "8 kg"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in athletics?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the event with a baton?", opts: ["Relay", "Sprint", "Hurdles", "Long jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the men's 100m world record (approx.)?", opts: ["9.58", "9.63", "9.72", "9.80"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the longest in track and field?", opts: ["10,000m", "5,000m", "Marathon", "3,000m steeplechase"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the jump event with a run-up and a board?", opts: ["Long jump", "Triple jump", "High jump", "Pole vault"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most world records in track?", opts: ["USA", "Jamaica", "Kenya", "Russia"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the throwing event with a spear?", opts: ["Javelin", "Discus", "Hammer", "Shot put"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 400m hurdle race?", opts: ["400m", "200m", "100m", "800m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the most popular in athletics?", opts: ["100m", "Marathon", "Long jump", "High jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the jump event with three phases?", opts: ["Triple jump", "Long jump", "High jump", "Pole vault"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most Olympic medals in athletics?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the throwing event with a heavy ball?", opts: ["Shot put", "Discus", "Hammer", "Javelin"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 100m race?", opts: ["100m", "200m", "400m", "800m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event involves running over obstacles?", opts: ["Hurdles", "Steeplechase", "Sprint", "Relay"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the event with a high bar?", opts: ["High jump", "Pole vault", "Long jump", "Triple jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most world records in distance running?", opts: ["Kenya", "Ethiopia", "USA", "UK"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the throwing event with a chain and ball?", opts: ["Hammer", "Discus", "Javelin", "Shot put"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 200m race?", opts: ["200m", "100m", "400m", "800m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the most technical in athletics?", opts: ["Pole vault", "High jump", "Long jump", "Triple jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the event with a baton exchange?", opts: ["Relay", "Sprint", "Hurdles", "Long jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most gold medals in the 100m?", opts: ["USA", "Jamaica", "UK", "Canada"], ans: 1, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the jump event with a sand pit?", opts: ["Long jump", "Triple jump", "High jump", "Pole vault"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 4x100m relay?", opts: ["4x100m", "4x200m", "4x400m", "4x800m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the oldest in athletics?", opts: ["Running", "Jumping", "Throwing", "All of the above"], ans: 3, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the throwing event with a heavy disc?", opts: ["Discus", "Hammer", "Javelin", "Shot put"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 800m race?", opts: ["800m", "400m", "200m", "100m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most world records in field events?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the event with a crossbar?", opts: ["High jump", "Pole vault", "Long jump", "Triple jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 1500m race?", opts: ["1500m", "800m", "1000m", "2000m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which event is the most popular in the Olympics?", opts: ["100m", "Marathon", "Relay", "High jump"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the name of the jump event with a run-up and a board?", opts: ["Long jump", "Triple jump", "High jump", "Pole vault"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "What is the distance of a 5000m race?", opts: ["5000m", "3000m", "10,000m", "2000m"], ans: 0, sport: "athletics", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in field events?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the men's world record for the 400m?", opts: ["43.03", "43.18", "43.30", "43.50"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete has the most Olympic gold medals in athletics?", opts: ["Carl Lewis", "Usain Bolt", "Paavo Nurmi", "Mo Farah"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 800m?", opts: ["1:53.28", "1:54.00", "1:55.00", "1:56.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most world records in athletics?", opts: ["USA", "Jamaica", "Kenya", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 100m?", opts: ["9.58", "9.63", "9.72", "9.80"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Lightning Bolt'?", opts: ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Justin Gatlin"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 100m?", opts: ["10.49", "10.60", "10.70", "10.80"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most Olympic golds in the marathon?", opts: ["Kenya", "Ethiopia", "USA", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 200m?", opts: ["19.19", "19.30", "19.40", "19.50"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete has the most world championships golds?", opts: ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Mo Farah"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 200m?", opts: ["21.34", "21.50", "21.60", "21.70"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most world records in distance running?", opts: ["Kenya", "Ethiopia", "USA", "UK"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 1500m?", opts: ["3:26.00", "3:28.00", "3:30.00", "3:32.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of the Track'?", opts: ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Mo Farah"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 1500m?", opts: ["3:50.07", "3:52.00", "3:54.00", "3:56.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most Olympic golds in sprinting?", opts: ["USA", "Jamaica", "UK", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 400m hurdles?", opts: ["45.94", "46.00", "46.20", "46.40"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Fastest Man Alive'?", opts: ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Justin Gatlin"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 400m hurdles?", opts: ["50.37", "50.50", "51.00", "51.50"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most world records in field events?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 5000m?", opts: ["12:35.36", "12:37.00", "12:39.00", "12:40.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Mo Farah'?", opts: ["Mo Farah", "Usain Bolt", "Carl Lewis", "Michael Johnson"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 5000m?", opts: ["14:06.00", "14:08.00", "14:10.00", "14:12.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most Olympic golds in middle-distance?", opts: ["Kenya", "Ethiopia", "USA", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 10,000m?", opts: ["26:11.00", "26:15.00", "26:20.00", "26:25.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Greatest Athlete'?", opts: ["Carl Lewis", "Usain Bolt", "Michael Johnson", "Mo Farah"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 10,000m?", opts: ["29:06.82", "29:10.00", "29:15.00", "29:20.00"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most world records in sprinting?", opts: ["USA", "Jamaica", "UK", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the 110m hurdles?", opts: ["12.80", "12.90", "13.00", "13.10"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Hurdle King'?", opts: ["Aries Merritt", "Liu Xiang", "Dayron Robles", "Grant Holloway"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the 100m hurdles?", opts: ["12.20", "12.30", "12.40", "12.50"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most Olympic golds in field events?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the high jump?", opts: ["2.45 m", "2.50 m", "2.55 m", "2.60 m"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Jump King'?", opts: ["Javier Sotomayor", "Kurtis Marschall", "Mutaz Barshim", "Maksim Nedasekau"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the high jump?", opts: ["2.09 m", "2.10 m", "2.11 m", "2.12 m"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most world records in middle-distance?", opts: ["Kenya", "Ethiopia", "USA", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the men's world record for the long jump?", opts: ["8.95 m", "8.90 m", "8.85 m", "8.80 m"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Long Jump Legend'?", opts: ["Mike Powell", "Carl Lewis", "Bob Beamon", "Jeff Henderson"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "What is the women's world record for the long jump?", opts: ["7.52 m", "7.50 m", "7.48 m", "7.45 m"], ans: 0, sport: "athletics", difficulty: "medium" },
+      { q: "Which country has the most Olympic golds in distance running?", opts: ["Kenya", "Ethiopia", "USA", "Russia"], ans: 0, sport: "athletics", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most Olympic gold medals in athletics by a single athlete?", opts: ["9", "8", "7", "6"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete has the most world records in a single event?", opts: ["Usain Bolt", "Carl Lewis", "Michael Johnson", "Mo Farah"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines all three jumps?", opts: ["Triple jump", "Long jump", "High jump", "Pole vault"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the 100m by an athlete?", opts: ["7", "6", "5", "4"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of the Track'?", opts: ["Allyson Felix", "Shelly-Ann Fraser-Pryce", "Elaine Thompson-Herah", "Dina Asher-Smith"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines running and throwing?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most Olympic golds in a single Games by an athlete?", opts: ["4", "3", "2", "1"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Kenyan Champion'?", opts: ["Eliud Kipchoge", "Mo Farah", "Usain Bolt", "Carl Lewis"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines distance running and hurdles?", opts: ["Steeplechase", "Hurdles", "Relay", "Sprint"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most world championships titles in a single event?", opts: ["10", "9", "8", "7"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'British Champion'?", opts: ["Mo Farah", "Usain Bolt", "Carl Lewis", "Michael Johnson"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines throwing and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the marathon by an athlete?", opts: ["6", "5", "4", "3"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'American Sprint King'?", opts: ["Carl Lewis", "Michael Johnson", "Justin Gatlin", "Tyson Gay"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines running and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most world records in a single day by an athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Jamaican Sprinter'?", opts: ["Usain Bolt", "Yohan Blake", "Asafa Powell", "Nesta Carter"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines running and throwing?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most Olympic golds in a single event by an athlete?", opts: ["4", "3", "2", "1"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Ethiopian Runner'?", opts: ["Haile Gebrselassie", "Kenenisa Bekele", "Mo Farah", "Eliud Kipchoge"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines jumping and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the 200m by an athlete?", opts: ["6", "5", "4", "3"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'South African Sprinter'?", opts: ["Wayde van Niekerk", "Usain Bolt", "Carl Lewis", "Michael Johnson"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines throwing and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most world championships golds in a single event?", opts: ["10", "9", "8", "7"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Kenyan Marathoner'?", opts: ["Eliud Kipchoge", "Mo Farah", "Usain Bolt", "Carl Lewis"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines jumping and throwing?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the 400m by an athlete?", opts: ["5", "4", "3", "2"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'American Runner'?", opts: ["Carl Lewis", "Michael Johnson", "Justin Gatlin", "Tyson Gay"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines running and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most Olympic golds in a single Games by a female athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Jamaican Runner'?", opts: ["Usain Bolt", "Yohan Blake", "Asafa Powell", "Nesta Carter"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines throwing and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the 1500m by an athlete?", opts: ["4", "3", "2", "1"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'British Runner'?", opts: ["Mo Farah", "Usain Bolt", "Carl Lewis", "Michael Johnson"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines running and throwing?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most world records in a single event by an athlete?", opts: ["5", "4", "3", "2"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Jamaican Sprinter'?", opts: ["Usain Bolt", "Yohan Blake", "Asafa Powell", "Nesta Carter"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the name of the event that combines jumping and throwing?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "athletics", difficulty: "hard" },
+      { q: "What is the record for the most consecutive wins in the 110m hurdles by an athlete?", opts: ["5", "4", "3", "2"], ans: 0, sport: "athletics", difficulty: "hard" },
+    ];
+    athleticsPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- WINTER SPORTS (120 items) ----
+    const winterPool = [
+      // easy (40)
+      { q: "Which sport is known as the 'King of Winter Sports'?", opts: ["Skiing", "Skating", "Bobsleigh", "Ice hockey"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a puck?", opts: ["Ice hockey", "Curling", "Bobsleigh", "Ski jumping"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country dominates ice hockey?", opts: ["Canada", "USA", "Russia", "Sweden"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a stone?", opts: ["Curling", "Bobsleigh", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most popular in the Winter Olympics?", opts: ["Ice hockey", "Figure skating", "Skiing", "Bobsleigh"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a sled?", opts: ["Bobsleigh", "Skeleton", "Luge", "All of the above"], ans: 3, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most Winter Olympic golds?", opts: ["Norway", "Germany", "USA", "Russia"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a ball?", opts: ["Ice hockey", "Curling", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most dangerous in winter sports?", opts: ["Ski jumping", "Bobsleigh", "Skeleton", "Luge"], ans: 2, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a figure?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most Winter Olympic medals?", opts: ["Norway", "Germany", "USA", "Russia"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a ski and a gun?", opts: ["Biathlon", "Skiing", "Skating", "Ice hockey"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most technical in winter sports?", opts: ["Figure skating", "Ski jumping", "Bobsleigh", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a helmet?", opts: ["Ice hockey", "Skiing", "Skating", "All of the above"], ans: 3, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in ice hockey?", opts: ["Canada", "USA", "Russia", "Sweden"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a pair of skis?", opts: ["Skiing", "Skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the fastest in winter sports?", opts: ["Skiing", "Bobsleigh", "Skeleton", "Luge"], ans: 1, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a pair of skates?", opts: ["Skating", "Skiing", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a stick?", opts: ["Ice hockey", "Curling", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most popular in the Winter Olympics?", opts: ["Ice hockey", "Figure skating", "Skiing", "Bobsleigh"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a heavy stone?", opts: ["Curling", "Bobsleigh", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in skiing?", opts: ["Norway", "Germany", "USA", "Switzerland"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a start house?", opts: ["Bobsleigh", "Skeleton", "Luge", "Ski jumping"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most graceful in winter sports?", opts: ["Figure skating", "Skiing", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a jump?", opts: ["Ski jumping", "Bobsleigh", "Skeleton", "Luge"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in speed skating?", opts: ["Netherlands", "Norway", "Germany", "USA"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a track?", opts: ["Skiing", "Skating", "Bobsleigh", "All of the above"], ans: 3, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most tactical in winter sports?", opts: ["Curling", "Ice hockey", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a gate?", opts: ["Skiing", "Skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in figure skating?", opts: ["Russia", "USA", "Canada", "Japan"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a puck and a stick?", opts: ["Ice hockey", "Curling", "Skiing", "Skating"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the oldest in winter sports?", opts: ["Skiing", "Skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a helmet and a suit?", opts: ["Skiing", "Skating", "Ice hockey", "All of the above"], ans: 3, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in curling?", opts: ["Canada", "Sweden", "Norway", "USA"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a chairlift?", opts: ["Skiing", "Skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "Which event is the most combined in winter sports?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a rink?", opts: ["Ice hockey", "Figure skating", "Speed skating", "All of the above"], ans: 3, sport: "winter", difficulty: "easy" },
+      { q: "Which country has the most gold medals in bobsleigh?", opts: ["Germany", "USA", "Canada", "Italy"], ans: 0, sport: "winter", difficulty: "easy" },
+      { q: "What is the name of the winter sport with a hill?", opts: ["Ski jumping", "Bobsleigh", "Skeleton", "Luge"], ans: 0, sport: "winter", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the record for the most Winter Olympic golds by a single athlete?", opts: ["8", "7", "6", "5"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete has the most Winter Olympic golds?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines cross-country skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Winter Olympics?", opts: ["Norway", "Germany", "USA", "Russia"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Biathlon'?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Skiing'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in skiing?", opts: ["Norway", "Germany", "USA", "Switzerland"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Winter Sports'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in speed skating?", opts: ["Netherlands", "Norway", "Germany", "USA"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Biathlon'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in figure skating?", opts: ["Russia", "USA", "Canada", "Japan"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Winter Sports'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in bobsleigh?", opts: ["Germany", "USA", "Canada", "Italy"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Skiing'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in curling?", opts: ["Canada", "Sweden", "Norway", "USA"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Biathlon'?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Biathlon'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in skiing?", opts: ["Norway", "Germany", "USA", "Switzerland"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Winter Sports'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "medium" },
+      { q: "Which country has the most gold medals in figure skating?", opts: ["Russia", "USA", "Canada", "Japan"], ans: 0, sport: "winter", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most gold medals in a single Winter Olympics by a country?", opts: ["16", "15", "14", "13"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete has the most Olympic golds in biathlon?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Winter Olympics in a single year?", opts: ["Norway", "Germany", "USA", "Russia"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by an athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of Skiing'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most medals in a single Winter Olympics by an athlete?", opts: ["5", "4", "3", "2"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of Biathlon'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in speed skating?", opts: ["Netherlands", "Norway", "Germany", "USA"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single Winter Olympics by a country?", opts: ["16", "15", "14", "13"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of Winter Sports'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in skiing?", opts: ["Norway", "Germany", "USA", "Switzerland"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most Olympic golds in a single event by an athlete?", opts: ["4", "3", "2", "1"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of Skiing'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in figure skating?", opts: ["Russia", "USA", "Canada", "Japan"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by an athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of Biathlon'?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single Winter Olympics by a country?", opts: ["16", "15", "14", "13"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of Biathlon'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in speed skating?", opts: ["Netherlands", "Norway", "Germany", "USA"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most medals in a single Winter Olympics by an athlete?", opts: ["5", "4", "3", "2"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of Winter Sports'?", opts: ["Bjørn Dæhlie", "Ole Einar Bjørndalen", "Marit Bjørgen", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines skiing and shooting?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in skiing?", opts: ["Norway", "Germany", "USA", "Switzerland"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most Olympic golds in a single event by an athlete?", opts: ["4", "3", "2", "1"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of Skiing'?", opts: ["Marit Bjørgen", "Ole Einar Bjørndalen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines ski jumping and cross-country skiing?", opts: ["Nordic combined", "Biathlon", "Ski jumping", "Ice hockey"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in figure skating?", opts: ["Russia", "USA", "Canada", "Japan"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by an athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of Biathlon'?", opts: ["Ole Einar Bjørndalen", "Marit Bjørgen", "Bjørn Dæhlie", "Ireen Wüst"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "What is the name of the event that combines speed and skill on ice?", opts: ["Figure skating", "Speed skating", "Ice hockey", "Curling"], ans: 0, sport: "winter", difficulty: "hard" },
+      { q: "Which country has the most gold medals in biathlon?", opts: ["Norway", "Germany", "Russia", "USA"], ans: 0, sport: "winter", difficulty: "hard" },
+    ];
+    winterPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ---- GENERAL (120 items) ----
+    const generalPool = [
+      // easy (40)
+      { q: "Which sport uses a shuttlecock?", opts: ["Badminton", "Tennis", "Squash", "Table tennis"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a heavy ball and pins?", opts: ["Bowling", "Cricket", "Baseball", "Golf"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which country invented basketball?", opts: ["USA", "Canada", "UK", "Australia"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a bat and a ball?", opts: ["Baseball", "Cricket", "Tennis", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most popular in the world?", opts: ["Soccer", "Cricket", "Basketball", "Tennis"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a net and a ball?", opts: ["Tennis", "Volleyball", "Badminton", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Olympic medals overall?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a ball and a hoop?", opts: ["Basketball", "Netball", "Handball", "Water polo"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which sport is known as the 'Queen of Sports'?", opts: ["Athletics", "Gymnastics", "Swimming", "Tennis"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a racquet?", opts: ["Tennis", "Squash", "Badminton", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most gold medals in Olympic history?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a club and a ball?", opts: ["Golf", "Baseball", "Cricket", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most televised?", opts: ["Soccer", "Basketball", "Tennis", "Cricket"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a glove?", opts: ["Baseball", "Boxing", "Cricket", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most FIFA World Cup wins?", opts: ["Brazil", "Germany", "Italy", "Argentina"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a ring?", opts: ["Boxing", "Wrestling", "MMA", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most physically demanding?", opts: ["Boxing", "Triathlon", "Soccer", "Rugby"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a board?", opts: ["Skateboarding", "Snowboarding", "Surfing", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most NBA championships?", opts: ["USA", "Canada", "Spain", "Argentina"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a boat?", opts: ["Rowing", "Sailing", "Canoeing", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most popular in the USA?", opts: ["Football", "Basketball", "Baseball", "Soccer"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a stick and a ball?", opts: ["Hockey", "Lacrosse", "Cricket", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Grand Slam titles in tennis?", opts: ["USA", "Spain", "Switzerland", "Serbia"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a bow and arrows?", opts: ["Archery", "Darts", "Javelin", "Shot put"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most played in the world?", opts: ["Soccer", "Cricket", "Basketball", "Tennis"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a vault?", opts: ["Gymnastics", "Pole vault", "Parkour", "All of the above"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in swimming?", opts: ["USA", "Australia", "China", "Russia"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a tackle?", opts: ["Football", "Rugby", "Wrestling", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most dangerous?", opts: ["Boxing", "MMA", "Skiing", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a basket?", opts: ["Basketball", "Netball", "Lacrosse", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in athletics?", opts: ["USA", "Russia", "Germany", "UK"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a wicket?", opts: ["Cricket", "Baseball", "Softball", "All of the above"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most popular in India?", opts: ["Cricket", "Soccer", "Hockey", "Badminton"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a goal?", opts: ["Soccer", "Ice hockey", "Handball", "All of the above"], ans: 3, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in gymnastics?", opts: ["Russia", "USA", "China", "Japan"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a pommel horse?", opts: ["Gymnastics", "Equestrian", "Judo", "Wrestling"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which sport is the most popular in Japan?", opts: ["Baseball", "Sumo", "Soccer", "Tennis"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a foil?", opts: ["Fencing", "Archery", "Javelin", "Shot put"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "Which country has the most Olympic golds in boxing?", opts: ["USA", "Russia", "Cuba", "UK"], ans: 0, sport: "general", difficulty: "easy" },
+      { q: "What is the name of the sport with a discus?", opts: ["Athletics", "Discus throw", "Hammer throw", "All of the above"], ans: 0, sport: "general", difficulty: "easy" },
+      // medium (40)
+      { q: "What is the record for the most Olympic golds in a single sport?", opts: ["8", "7", "6", "5"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete has the most Olympic golds overall?", opts: ["Michael Phelps", "Larisa Latynina", "Paavo Nurmi", "Carl Lewis"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines fencing, swimming, and running?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in a single Olympic Games?", opts: ["USA", "Russia", "China", "Germany"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines swimming, cycling, and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Greatest of All Time'?", opts: ["Michael Phelps", "Usain Bolt", "Serena Williams", "Michael Jordan"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines shooting and skiing?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Modern pentathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most medals in the Winter Olympics?", opts: ["Norway", "Germany", "USA", "Russia"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines running, swimming, and shooting?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Swimming'?", opts: ["Katie Ledecky", "Missy Franklin", "Simone Manuel", "Rebecca Soni"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines jumping and skiing?", opts: ["Ski jumping", "Nordic combined", "Biathlon", "Modern pentathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Summer Olympics?", opts: ["USA", "Russia", "China", "Germany"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines fencing and running?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Sports'?", opts: ["Usain Bolt", "Michael Phelps", "Serena Williams", "Michael Jordan"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines shooting and running?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Paralympics?", opts: ["USA", "China", "UK", "Russia"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines swimming and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Sports'?", opts: ["Serena Williams", "Simone Biles", "Katie Ledecky", "Marta"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines cycling and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the World Cup?", opts: ["Brazil", "Germany", "Italy", "Argentina"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines swimming and cycling?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Tennis'?", opts: ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Pete Sampras"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines throwing and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the European Championships?", opts: ["Germany", "Russia", "UK", "France"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines jumping and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Tennis'?", opts: ["Serena Williams", "Steffi Graf", "Martina Navratilova", "Chris Evert"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines throwing and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the African Championships?", opts: ["South Africa", "Nigeria", "Kenya", "Egypt"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines running and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Basketball'?", opts: ["Michael Jordan", "LeBron James", "Kareem Abdul-Jabbar", "Bill Russell"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines swimming and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Asian Games?", opts: ["China", "Japan", "South Korea", "India"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines cycling and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'Queen of Basketball'?", opts: ["Lisa Leslie", "Diana Taurasi", "Sue Bird", "Candace Parker"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines swimming and cycling?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Pan American Games?", opts: ["USA", "Brazil", "Canada", "Cuba"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines throwing and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which athlete is known as the 'King of Golf'?", opts: ["Tiger Woods", "Jack Nicklaus", "Arnold Palmer", "Rory McIlroy"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "What is the name of the sport that combines jumping and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "medium" },
+      { q: "Which country has the most gold medals in the Pacific Games?", opts: ["New Zealand", "Australia", "Fiji", "Papua New Guinea"], ans: 0, sport: "general", difficulty: "medium" },
+      // hard (40)
+      { q: "What is the record for the most Olympic golds in a single sport by an athlete?", opts: ["8", "7", "6", "5"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete has the most world championships titles in a single sport?", opts: ["Michael Phelps", "Usain Bolt", "Serena Williams", "Roger Federer"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines shooting and skiing?", opts: ["Biathlon", "Nordic combined", "Ski jumping", "Modern pentathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the World Championships?", opts: ["USA", "Russia", "Germany", "China"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by an athlete?", opts: ["3", "2", "1", "0"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of the World'?", opts: ["Usain Bolt", "Michael Phelps", "Serena Williams", "Michael Jordan"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines running, swimming, and shooting?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Youth Olympics?", opts: ["USA", "China", "Russia", "UK"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most medals in a single Olympic Games by an athlete?", opts: ["8", "7", "6", "5"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of the World'?", opts: ["Serena Williams", "Simone Biles", "Katie Ledecky", "Marta"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines fencing and running?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the European Games?", opts: ["Russia", "Germany", "UK", "France"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single sport by a country?", opts: ["10", "9", "8", "7"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of the Decathlon'?", opts: ["Ashton Eaton", "Kevin Mayer", "Daley Thompson", "Jim Thorpe"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines shooting and running?", opts: ["Modern pentathlon", "Triathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Commonwealth Games?", opts: ["Australia", "Canada", "UK", "India"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by a country?", opts: ["5", "4", "3", "2"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of the Decathlon'?", opts: ["Jackie Joyner-Kersee", "Carolina Klüft", "Jessica Ennis-Hill", "Nafissatou Thiam"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines swimming and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the World Games?", opts: ["USA", "Germany", "Italy", "France"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single World Championships by a country?", opts: ["10", "9", "8", "7"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of the Marathon'?", opts: ["Eliud Kipchoge", "Mo Farah", "Kenenisa Bekele", "Haile Gebrselassie"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines cycling and running?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Mediterranean Games?", opts: ["Italy", "France", "Spain", "Turkey"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by a team?", opts: ["3", "2", "1", "0"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of the Marathon'?", opts: ["Paula Radcliffe", "Mary Keitany", "Brigid Kosgei", "Valentina Yegorova"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines swimming and cycling?", opts: ["Triathlon", "Modern pentathlon", "Biathlon", "Decathlon"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Pan American Games?", opts: ["USA", "Brazil", "Canada", "Cuba"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single World Championships by an athlete?", opts: ["8", "7", "6", "5"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of the World Cup'?", opts: ["Marta", "Pelé", "Diego Maradona", "Zinedine Zidane"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines throwing and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Asian Games?", opts: ["China", "Japan", "South Korea", "India"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most consecutive Olympic golds by an athlete in a single event?", opts: ["3", "2", "1", "0"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'Queen of the World Cup'?", opts: ["Marta", "Birgit Prinz", "Mia Hamm", "Alex Morgan"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines jumping and running?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the African Games?", opts: ["South Africa", "Nigeria", "Kenya", "Egypt"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the record for the most gold medals in a single Olympic Games by a country?", opts: ["16", "15", "14", "13"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which athlete is known as the 'King of the Olympics'?", opts: ["Michael Phelps", "Usain Bolt", "Carl Lewis", "Paavo Nurmi"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "What is the name of the sport that combines throwing and jumping?", opts: ["Decathlon", "Heptathlon", "Pentathlon", "All of the above"], ans: 0, sport: "general", difficulty: "hard" },
+      { q: "Which country has the most gold medals in the Pacific Games?", opts: ["New Zealand", "Australia", "Fiji", "Papua New Guinea"], ans: 0, sport: "general", difficulty: "hard" },
+    ];
+    generalPool.forEach(item => QUESTION_BANK.push(item));
+
+    // ----- DOM refs (same as before) -----
+    const questionText = document.getElementById('questionText');
+    const optionsBtns = document.querySelectorAll('.option-btn');
+    const feedback = document.getElementById('feedbackMessage');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const qIndexDisplay = document.getElementById('qIndexDisplay');
+    const totalQDisplay = document.getElementById('totalQDisplay');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const sportFilter = document.getElementById('sportFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
+
+    // ----- State -----
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+    const TOTAL_ROUNDS = 10;
+
+    // ----- Helpers (shuffle, filter) -----
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function getFilteredQuestions() {
+      const sport = sportFilter.value;
+      const difficulty = difficultyFilter.value;
+      let filtered = QUESTION_BANK.filter(item => {
+        if (sport !== 'all' && item.sport !== sport) return false;
+        if (difficulty !== 'all' && item.difficulty !== difficulty) return false;
+        return true;
+      });
+      // Fallback: if empty, use all questions
+      if (filtered.length === 0) {
+        filtered = [...QUESTION_BANK];
+      }
+      const shuffled = shuffleArray(filtered);
+      // Ensure we have at least TOTAL_ROUNDS (duplicate if necessary)
+      let result = [];
+      while (result.length < TOTAL_ROUNDS) {
+        for (let item of shuffled) {
+          if (result.length >= TOTAL_ROUNDS) break;
+          result.push({ ...item });
+        }
+      }
+      return result;
+    }
+
+    function resetGame() {
+      currentQuestions = getFilteredQuestions();
+      currentIndex = 0;
+      score = 0;
+      answered = false;
+      updateScoreAndIndex();
+      renderQuestion(currentIndex);
+      optionsBtns.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('correct', 'wrong');
+      });
+      feedback.innerHTML = '🤔 Pick an answer!';
+      nextBtn.disabled = false;
+      nextBtn.textContent = '▶ Next';
+    }
+
+    function updateScoreAndIndex() {
+      scoreDisplay.textContent = score;
+      qIndexDisplay.textContent = currentIndex + 1;
+      totalQDisplay.textContent = TOTAL_ROUNDS;
+    }
+
+    function renderQuestion(index) {
+      const qData = currentQuestions[index];
+      if (!qData) return;
+      questionText.textContent = qData.q;
+      qData.opts.forEach((opt, i) => {
+        if (optionsBtns[i]) {
+          optionsBtns[i].textContent = opt;
+          optionsBtns[i].dataset.correct = (i === qData.ans) ? 'true' : 'false';
+          optionsBtns[i].classList.remove('correct', 'wrong');
+          optionsBtns[i].disabled = false;
+        }
+      });
+      answered = false;
+      if (index === TOTAL_ROUNDS - 1) {
+        nextBtn.textContent = '🏁 Finish';
+      } else {
+        nextBtn.textContent = '▶ Next';
+      }
+      optionsBtns.forEach(btn => btn.disabled = false);
+    }
+
+    // ----- Event handlers (same as before) -----
+    function handleOptionClick(e) {
+      const btn = e.currentTarget;
+      if (answered || btn.disabled) return;
+      const isCorrect = btn.dataset.correct === 'true';
+      answered = true;
+      optionsBtns.forEach(b => b.disabled = true);
+
+      optionsBtns.forEach(b => {
+        if (b.dataset.correct === 'true') b.classList.add('correct');
+        else if (b === btn && !isCorrect) b.classList.add('wrong');
+      });
+
+      if (isCorrect) {
+        score += 1;
+        feedback.innerHTML = '✅ Correct! +1 point 🎉';
+      } else {
+        const correctAns = currentQuestions[currentIndex].opts[currentQuestions[currentIndex].ans];
+        feedback.innerHTML = `❌ Oops, the answer was “${correctAns}”`;
+      }
+      scoreDisplay.textContent = score;
+    }
+
+    function handleNext() {
+      if (!answered) {
+        feedback.innerHTML = '⚠️ Please answer the current question first!';
+        return;
+      }
+      if (currentIndex === TOTAL_ROUNDS - 1) {
+        feedback.innerHTML = `🏁 Game over! Your score: ${score} / ${TOTAL_ROUNDS} 🎯`;
+        nextBtn.disabled = true;
+        optionsBtns.forEach(b => b.disabled = true);
+        return;
+      }
+      currentIndex++;
+      updateScoreAndIndex();
+      renderQuestion(currentIndex);
+      answered = false;
+      feedback.innerHTML = '🤔 Pick an answer!';
+      nextBtn.disabled = false;
+      optionsBtns.forEach(b => b.classList.remove('correct', 'wrong'));
+    }
+
+    // ----- Bind events -----
+    optionsBtns.forEach(btn => btn.addEventListener('click', handleOptionClick));
+    nextBtn.addEventListener('click', handleNext);
+
+    resetBtn.addEventListener('click', function() {
+      resetGame();
+      nextBtn.disabled = false;
+      nextBtn.textContent = '▶ Next';
+      feedback.innerHTML = '🔄 New game! Good luck.';
+      optionsBtns.forEach(b => {
+        b.disabled = false;
+        b.classList.remove('correct', 'wrong');
+      });
+      updateScoreAndIndex();
+    });
+
+    sportFilter.addEventListener('change', resetGame);
+    difficultyFilter.addEventListener('change', resetGame);
+
+    // ----- Start -----
+    resetGame();
+    feedback.innerHTML = '⚡ Select a sport & difficulty, then play!';
+  })();
+</script>
+</body>
+</html>
